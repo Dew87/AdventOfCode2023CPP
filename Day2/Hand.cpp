@@ -1,5 +1,5 @@
-#include "Hand.hpp"
-#include "Color.hpp"
+#include "Hand.h"
+#include "Color.h"
 
 using namespace std;
 

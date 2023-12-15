@@ -133,9 +133,9 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Color.hpp" />
-    <ClInclude Include="Game.hpp" />
-    <ClInclude Include="Hand.hpp" />
+    <ClInclude Include="Color.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="Hand.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

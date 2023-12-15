@@ -1,7 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "Hand.hpp"
+#include "Hand.h"
 #include <ostream>
 #include <vector>
 

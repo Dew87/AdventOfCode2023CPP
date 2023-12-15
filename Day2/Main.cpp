@@ -1,5 +1,5 @@
-#include "Game.hpp"
-#include "Color.hpp"
+#include "Game.h"
+#include "Color.h"
 #include <iostream>
 #include <string>
 #include <vector>
