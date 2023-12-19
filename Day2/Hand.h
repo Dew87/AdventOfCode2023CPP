@@ -1,8 +1,8 @@
 #ifndef HAND_H
 #define HAND_H
 
-#include <vector>
 #include <ostream>
+#include <vector>
 
 struct Hand
 {
