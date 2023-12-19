@@ -99,6 +99,21 @@ void InputGames(vector<Game> &vOutput)
 	cout << "End of games input\n\n";
 }
 
+template <typename T>
+void PrintVector(const vector<T> &vInput, const char *vName, const char* separation)
+{
+	cout << "Start of " << vName << "[" << vInput.size() << "] print\n";
+	if (0 < vInput.size())
+	{
+		for (size_t i = 0; i < vInput.size() - 1; i++)
+		{
+			cout << vInput[i] << separation;
+		}
+		cout << vInput[vInput.size() - 1] << "\n";
+	}
+	cout << "End of " << vName << " print\n\n";
+}
+
 int SumOfIDforValidGames(const vector<Game> games, const vector<int> &vProvided)
 {
 	int sum = 0;
@@ -163,21 +178,6 @@ int SumOfPowerForMinimumSetsOfCubes(const vector<Game> games)
 		sum += power;
 	}
 	return sum;
-}
-
-template <typename T>
-void PrintVector(const vector<T> &vInput, const char *vName, const char* separation)
-{
-	cout << "Start of " << vName << "[" << vInput.size() << "] print\n";
-	if (0 < vInput.size())
-	{
-		for (size_t i = 0; i < vInput.size() - 1; i++)
-		{
-			cout << vInput[i] << separation;
-		}
-		cout << vInput[vInput.size() - 1] << "\n";
-	}
-	cout << "End of " << vName << " print\n\n";
 }
 
 int main()
