@@ -77,6 +77,7 @@ int main()
 	PrintVector(schematic, "schematic", "\n");
 
 	Engine engine(schematic);
+	engine.ValidateGears();
 
 	int sumOfPartNumbers = SumOfPartNumbers(engine);
 	int sumOfGearRatios = SumOfGearRatios(engine);

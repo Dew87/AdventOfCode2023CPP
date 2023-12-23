@@ -6,20 +6,7 @@
 
 using namespace std;
 
-vector<string> split(const string &input, const string &delimiter)
-{
-	vector<string> output;
-
-	string s = input;
-	for (size_t i = s.find(delimiter); i != string::npos; i = s.find(delimiter))
-	{
-		output.push_back(s.substr(0, i));
-		s = s.substr(i + delimiter.size());
-	}
-	output.push_back(s);
-
-	return output;
-}
+vector<string> Split(const string &input, const string &delimiter);
 
 void InputGames(vector<Game> &vOutput)
 {
@@ -54,13 +41,13 @@ void InputGames(vector<Game> &vOutput)
 			// Initialize game
 			Game game(id);
 
-			// hands
-			vector<string> sHands = split(s2, "; ");
+			// Hands
+			vector<string> sHands = Split(s2, "; ");
 			for (size_t i = 0; i < sHands.size(); ++i)
 			{
 				vector<int> colors(NUMBER_OF_COLORS);
 
-				vector<string> sColors = split(sHands[i], ", ");
+				vector<string> sColors = Split(sHands[i], ", ");
 				for (size_t j = 0; j < sColors.size(); ++j)
 				{
 					index = sColors[j].find(" ");
@@ -112,6 +99,21 @@ void PrintVector(const vector<T> &vInput, const char *vName, const char* separat
 		cout << vInput[vInput.size() - 1] << "\n";
 	}
 	cout << "End of " << vName << " print\n\n";
+}
+
+vector<string> Split(const string &input, const string &delimiter)
+{
+	vector<string> output;
+
+	string str = input;
+	for (size_t i = str.find(delimiter); i != string::npos; i = str.find(delimiter))
+	{
+		output.push_back(str.substr(0, i));
+		str = str.substr(i + delimiter.size());
+	}
+	output.push_back(str);
+
+	return output;
 }
 
 int SumOfIDforValidGames(const vector<Game> games, const vector<int> &vProvided)
@@ -177,6 +179,7 @@ int SumOfPowerForMinimumSetsOfCubes(const vector<Game> games)
 		}
 		sum += power;
 	}
+
 	return sum;
 }
 

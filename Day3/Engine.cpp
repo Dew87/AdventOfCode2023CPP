@@ -9,7 +9,6 @@ Engine::Engine()
 Engine::Engine(const vector<string> &schematic)
 {
 	BuildFromSchematic(schematic);
-	ValidateGears();
 }
 
 Engine::~Engine()
@@ -104,7 +103,6 @@ void Engine::BuildFromSchematic(const vector<string> &schematic)
 		{
 			target.x = j;
 			target.y = position.y - 1;
-			//cout << "Checking above: " << target << "\n";
 			for (size_t k = 0; k < nodes.size(); ++k)
 			{
 				if (nodes[k].position == target)
@@ -120,7 +118,6 @@ void Engine::BuildFromSchematic(const vector<string> &schematic)
 		{
 			target.x = j;
 			target.y = position.y + 1;
-			//cout << "Checking below: " << target << "\n";
 			for (size_t k = 0; k < nodes.size(); ++k)
 			{
 				if (nodes[k].position == target)
@@ -134,7 +131,6 @@ void Engine::BuildFromSchematic(const vector<string> &schematic)
 		// Check neighbor left
 		target.x = position.x - 1;
 		target.y = position.y;
-		//cout << "Checking left: " << target << "\n";
 		for (size_t k = 0; k < nodes.size(); ++k)
 		{
 			if (nodes[k].position == target)
@@ -147,7 +143,6 @@ void Engine::BuildFromSchematic(const vector<string> &schematic)
 		// Check neighbor right
 		target.x = position.x + digits;
 		target.y = position.y;
-		//cout << "Checking right: " << target << "\n";
 		for (size_t k = 0; k < nodes.size(); ++k)
 		{
 			if (nodes[k].position == target)

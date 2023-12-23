@@ -4,6 +4,8 @@
 
 using namespace std;
 
+const size_t NUMBER_OF_NUMBERS = 10;
+
 const char* NUMBERS[] =
 {
 	"zero",
@@ -72,7 +74,7 @@ int SumOfCalibrationNew(const vector<string> &vInput)
 				break;
 			}
 		}
-		for (int j = 0; j < 10; ++j)
+		for (int j = 0; j < NUMBER_OF_NUMBERS; ++j)
 		{
 			int index = input.find(NUMBERS[j]);
 			if (index != string::npos && index < first_digit_index)
@@ -92,7 +94,7 @@ int SumOfCalibrationNew(const vector<string> &vInput)
 				break;
 			}
 		}
-		for (int j = 0; j < 10; ++j)
+		for (int j = 0; j < NUMBER_OF_NUMBERS; ++j)
 		{
 			int index = input.rfind(NUMBERS[j]);
 			if (index != string::npos && last_digit_index < index)
