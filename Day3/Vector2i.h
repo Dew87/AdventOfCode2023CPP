@@ -8,8 +8,7 @@ struct Vector2i
 	Vector2i();
 	Vector2i(int x, int y);
 
-	int x;
-	int y;
+	int X, Y;
 };
 
 bool operator == (const Vector2i a, const Vector2i b);

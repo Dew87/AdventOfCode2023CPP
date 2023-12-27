@@ -3,9 +3,6 @@
 
 using namespace std;
 
-Engine::Engine()
-{}
-
 Engine::Engine(const vector<string> &schematic)
 {
 	BuildFromSchematic(schematic);
@@ -13,17 +10,17 @@ Engine::Engine(const vector<string> &schematic)
 
 Engine::~Engine()
 {
-	for (size_t i = 0; i < linkedParts.size(); ++i)
+	for (vector<Part*>::iterator i = LinkedParts.begin(); i != LinkedParts.end(); ++i)
 	{
-		delete linkedParts[i];
+		delete *i;
 	}
-	for (size_t i = 0; i < unlinkedParts.size(); ++i)
+	for (vector<Part*>::iterator i = UnlinkedParts.begin(); i != UnlinkedParts.end(); ++i)
 	{
-		delete unlinkedParts[i];
+		delete *i;
 	}
 
-	linkedParts.clear();
-	unlinkedParts.clear();
+	LinkedParts.clear();
+	UnlinkedParts.clear();
 }
 
 void Engine::BuildFromSchematic(const vector<string> &schematic)
@@ -34,8 +31,6 @@ void Engine::BuildFromSchematic(const vector<string> &schematic)
 	{
 		for (size_t j = 0; j < schematic[i].size(); ++j)
 		{
-			int number = -1;
-
 			switch (schematic[i][j])
 			{
 			case '.':
@@ -53,6 +48,7 @@ void Engine::BuildFromSchematic(const vector<string> &schematic)
 			case '8':
 			case '9':
 				// Start of part number
+				int number;
 				size_t end;
 				for (end = j; end < schematic[i].size() - 1; ++end)
 				{
@@ -79,98 +75,98 @@ void Engine::BuildFromSchematic(const vector<string> &schematic)
 
 			case '*':
 				// Gear
-				nodes.push_back(Node(Vector2i(j, i), true));
+				Nodes.push_back(Node(Vector2i(j, i), true));
 				break;
 
 			default:
 				// Node
-				nodes.push_back(Node(Vector2i(j, i), false));
+				Nodes.push_back(Node(Vector2i(j, i), false));
 				break;
 			}
 		}
 	}
 
 	// Sort parts
-	for (size_t i = 0; i < parts.size(); ++i)
+	for (vector<Part*>::iterator i = parts.begin(); i != parts.end(); ++i)
 	{
 		bool linked = false;
-		Vector2i position = parts[i]->position;
+		Vector2i position = (*i)->Position;
 		Vector2i target;
-		int digits = (int)to_string(parts[i]->number).size();
+		int digits = (int)to_string((*i)->Number).size();
 
 		// Check neighbors above
-		for (int j = position.x - 1; j < (position.x + digits + 1); ++j)
+		for (int j = position.X - 1; j <= (position.X + digits); ++j)
 		{
-			target.x = j;
-			target.y = position.y - 1;
-			for (size_t k = 0; k < nodes.size(); ++k)
+			target.X = j;
+			target.Y = position.Y - 1;
+			for (vector<Node>::iterator k = Nodes.begin(); k != Nodes.end(); ++k)
 			{
-				if (nodes[k].position == target)
+				if ((*k).Position == target)
 				{
 					linked = true;
-					nodes[k].linkedParts.push_back(parts[i]);
+					(*k).LinkedParts.push_back(*i);
 				}
 			}
 		}
 
 		// Check neighbors below
-		for (int j = position.x - 1; j < (position.x + digits + 1); ++j)
+		for (int j = position.X - 1; j <= (position.X + digits); ++j)
 		{
-			target.x = j;
-			target.y = position.y + 1;
-			for (size_t k = 0; k < nodes.size(); ++k)
+			target.X = j;
+			target.Y = position.Y + 1;
+			for (vector<Node>::iterator k = Nodes.begin(); k != Nodes.end(); ++k)
 			{
-				if (nodes[k].position == target)
+				if ((*k).Position == target)
 				{
 					linked = true;
-					nodes[k].linkedParts.push_back(parts[i]);
+					(*k).LinkedParts.push_back(*i);
 				}
 			}
 		}
 
 		// Check neighbor left
-		target.x = position.x - 1;
-		target.y = position.y;
-		for (size_t k = 0; k < nodes.size(); ++k)
+		target.X = position.X - 1;
+		target.Y = position.Y;
+		for (vector<Node>::iterator k = Nodes.begin(); k != Nodes.end(); ++k)
 		{
-			if (nodes[k].position == target)
+			if ((*k).Position == target)
 			{
 				linked = true;
-				nodes[k].linkedParts.push_back(parts[i]);
+				(*k).LinkedParts.push_back(*i);
 			}
 		}
 
 		// Check neighbor right
-		target.x = position.x + digits;
-		target.y = position.y;
-		for (size_t k = 0; k < nodes.size(); ++k)
+		target.X = position.X + digits;
+		target.Y = position.Y;
+		for (vector<Node>::iterator k = Nodes.begin(); k != Nodes.end(); ++k)
 		{
-			if (nodes[k].position == target)
+			if ((*k).Position == target)
 			{
 				linked = true;
-				nodes[k].linkedParts.push_back(parts[i]);
+				(*k).LinkedParts.push_back(*i);
 			}
 		}
 
 		// Place part
 		if (linked)
 		{
-			linkedParts.push_back(parts[i]);
+			LinkedParts.push_back(*i);
 		}
 		else
 		{
-			unlinkedParts.push_back(parts[i]);
+			UnlinkedParts.push_back(*i);
 		}
 	}
 }
 
 void Engine::ValidateGears()
 {
-	for (size_t i = 0; i < nodes.size(); ++i)
+	for (vector<Node>::iterator i = Nodes.begin(); i != Nodes.end(); ++i)
 	{
-		if (nodes[i].isGear)
+		if ((*i).IsGear)
 		{
-			nodes[i].isGear = (2 == (int)nodes[i].linkedParts.size());
+			(*i).IsGear = (2 == (int)(*i).LinkedParts.size());
 		}
 	}
 }

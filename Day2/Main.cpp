@@ -8,18 +8,21 @@ using namespace std;
 
 vector<string> Split(const string &input, const string &delimiter);
 
-void InputGames(vector<Game> &vOutput)
+void InputGames(vector<Game> &output)
 {
 	cout << "Start of games input (blank line to end)\n";
 	while (true)
 	{
+		size_t index;
 		string input;
-		getline(cin, input);
 
-		size_t index = input.find(": ");
+		getline(cin, input);
+		index = input.find(": ");
+
 		if (index != string::npos)
 		{
-			int id = 0;
+			int id;
+			vector<Hand> hands;
 
 			string s1 = input.substr(0, index);
 			string s2 = input.substr(index + 2);
@@ -36,50 +39,47 @@ void InputGames(vector<Game> &vOutput)
 				{
 					break;
 				}
-			}
 
-			// Initialize game
-			Game game(id);
-
-			// Hands
-			vector<string> sHands = Split(s2, "; ");
-			for (size_t i = 0; i < sHands.size(); ++i)
-			{
-				vector<int> colors(NUMBER_OF_COLORS);
-
-				vector<string> sColors = Split(sHands[i], ", ");
-				for (size_t j = 0; j < sColors.size(); ++j)
+				// Get hands
+				vector<string> vStringHands = Split(s2, "; ");
+				for (vector<string>::iterator i = vStringHands.begin(); i != vStringHands.end(); ++i)
 				{
-					index = sColors[j].find(" ");
-					if (index != string::npos)
-					{
-						int number = 0;
-						try
-						{
-							number = stoi(sColors[j].substr(0, index));
-						}
-						catch (exception e)
-						{
-							continue;
-						}
+					vector<int> colors(NUMBER_OF_COLORS, 0);
+					vector<string> vStringColors = Split(*i, ", ");
 
-						string color = sColors[j].substr(index + 1);
-						for (size_t k = 0; k < NUMBER_OF_COLORS; ++k)
+					for (vector<string>::iterator j = vStringColors.begin(); j != vStringColors.end(); ++j)
+					{
+						index = (*j).find(" ");
+						if (index != string::npos)
 						{
-							if (color == COLORS[k])
+							int number;
+							try
 							{
-								colors[k] = number;
-								break;
+								number = stoi((*j).substr(0, index));
+							}
+							catch (exception e)
+							{
+								continue;
+							}
+
+							string color = (*j).substr(index + 1);
+							for (size_t k = 0; k < NUMBER_OF_COLORS; ++k)
+							{
+								if (color == COLORS[k])
+								{
+									colors[k] = number;
+									break;
+								}
 							}
 						}
 					}
+
+					hands.push_back(Hand(colors));
 				}
 
-				game.hands.push_back(Hand(colors));
+				output.push_back(Game(id, hands));
+				continue;
 			}
-
-			vOutput.push_back(game);
-			continue;
 		}
 		break;
 	}
@@ -87,50 +87,51 @@ void InputGames(vector<Game> &vOutput)
 }
 
 template <typename T>
-void PrintVector(const vector<T> &vInput, const char *vName, const char* separation)
+void PrintVector(const vector<T> &input, const char *name, const char* delimiter)
 {
-	cout << "Start of " << vName << "[" << vInput.size() << "] print\n";
-	if (0 < vInput.size())
+	cout << "Start of " << name << "[" << input.size() << "] print\n";
+	if (!input.empty())
 	{
-		for (size_t i = 0; i < vInput.size() - 1; i++)
+		typename vector<T>::const_iterator i, end;
+		for (i = input.begin(), end = --input.end(); i != end; ++i)
 		{
-			cout << vInput[i] << separation;
+			cout << *i << delimiter;
 		}
-		cout << vInput[vInput.size() - 1] << "\n";
+		cout << *i << "\n";
 	}
-	cout << "End of " << vName << " print\n\n";
+	cout << "End of " << name << " print\n\n";
 }
 
 vector<string> Split(const string &input, const string &delimiter)
 {
 	vector<string> output;
 
-	string str = input;
-	for (size_t i = str.find(delimiter); i != string::npos; i = str.find(delimiter))
+	string remaining = input;
+	for (size_t i = remaining.find(delimiter); i != string::npos; i = remaining.find(delimiter))
 	{
-		output.push_back(str.substr(0, i));
-		str = str.substr(i + delimiter.size());
+		output.push_back(remaining.substr(0, i));
+		remaining = remaining.substr(i + delimiter.size());
 	}
-	output.push_back(str);
+	output.push_back(remaining);
 
 	return output;
 }
 
-int SumOfIDforValidGames(const vector<Game> games, const vector<int> &vProvided)
+int SumOfIDforValidGames(const vector<Game> games, const vector<int> &provided)
 {
 	int sum = 0;
 
-	for (size_t i = 0; i < games.size(); ++i)
+	for (vector<Game>::const_iterator i = games.begin(); i != games.end(); ++i)
 	{
 		vector<int> needed(NUMBER_OF_COLORS);
 
-		for (size_t j = 0; j < games[i].hands.size(); ++j)
+		for (vector<Hand>::const_iterator j = (*i).Hands.begin(); j != (*i).Hands.end(); ++j)
 		{
 			for (size_t k = 0; k < NUMBER_OF_COLORS; ++k)
 			{
-				if (needed[k] < games[i].hands[j].colors[k])
+				if (needed[k] < (*j).Colors[k])
 				{
-					needed[k] = games[i].hands[j].colors[k];
+					needed[k] = (*j).Colors[k];
 				}
 			}
 		}
@@ -138,7 +139,7 @@ int SumOfIDforValidGames(const vector<Game> games, const vector<int> &vProvided)
 		bool valid = true;
 		for (size_t j = 0; j < NUMBER_OF_COLORS; ++j)
 		{
-			if (vProvided[j] < needed[j])
+			if (provided[j] < needed[j])
 			{
 				valid = false;
 				break;
@@ -146,7 +147,7 @@ int SumOfIDforValidGames(const vector<Game> games, const vector<int> &vProvided)
 		}
 		if (valid)
 		{
-			sum += games[i].ID;
+			sum += (*i).ID;
 		}
 	}
 
@@ -157,25 +158,25 @@ int SumOfPowerForMinimumSetsOfCubes(const vector<Game> games)
 {
 	int sum = 0;
 
-	for (size_t i = 0; i < games.size(); ++i)
+	for (vector<Game>::const_iterator i = games.begin(); i != games.end(); ++i)
 	{
 		vector<int> needed(NUMBER_OF_COLORS);
 
-		for (size_t j = 0; j < games[i].hands.size(); ++j)
+		for (vector<Hand>::const_iterator j = (*i).Hands.begin(); j != (*i).Hands.end(); ++j)
 		{
 			for (size_t k = 0; k < NUMBER_OF_COLORS; ++k)
 			{
-				if (needed[k] < games[i].hands[j].colors[k])
+				if (needed[k] < (*j).Colors[k])
 				{
-					needed[k] = games[i].hands[j].colors[k];
+					needed[k] = (*j).Colors[k];
 				}
 			}
 		}
 
 		int power = 1;
-		for (size_t j = 0; j < NUMBER_OF_COLORS; ++j)
+		for (vector<int>::iterator j = needed.begin(); j < needed.end(); ++j)
 		{
-			power *= needed[j];
+			power *= *j;
 		}
 		sum += power;
 	}

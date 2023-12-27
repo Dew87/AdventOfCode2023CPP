@@ -7,8 +7,8 @@ struct Part
 {
 	Part(Vector2i position, int number);
 
-	int number;
-	Vector2i position;
+	int Number;
+	Vector2i Position;
 };
 
 #endif

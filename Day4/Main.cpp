@@ -9,13 +9,13 @@ vector<string> Split(const string &input, const string &delimiter);
 
 void CalculateMatchingNumbers(vector<Card> &cards)
 {
-	for (size_t i = 0; i < cards.size(); ++i)
+	for (vector<Card>::iterator i = cards.begin(); i != cards.end(); ++i)
 	{
-		cards[i].CalculateMatchingNumbers();
+		(*i).CalculateMatchingNumbers();
 	}
 }
 
-void InputCards(vector<Card> &vOutput)
+void InputCards(vector<Card> &output)
 {
 	cout << "Start of cards input (blank line to end)\n";
 	while (true)
@@ -85,7 +85,7 @@ void InputCards(vector<Card> &vOutput)
 				winningNumbers.push_back(number);
 			}
 
-			vOutput.push_back(Card(id, numbers, winningNumbers));
+			output.push_back(Card(id, numbers, winningNumbers));
 			continue;
 		}
 		break;
@@ -94,31 +94,32 @@ void InputCards(vector<Card> &vOutput)
 }
 
 template <typename T>
-void PrintVector(const vector<T> &vInput, const char *vName, const char* separation)
+void PrintVector(const vector<T> &input, const char *name, const char* delimiter)
 {
-	cout << "Start of " << vName << "[" << vInput.size() << "] print\n";
-	if (0 < vInput.size())
+	cout << "Start of " << name << "[" << input.size() << "] print\n";
+	if (!input.empty())
 	{
-		for (size_t i = 0; i < vInput.size() - 1; i++)
+		typename vector<T>::const_iterator i, end;
+		for (i = input.begin(), end = --input.end(); i != end; ++i)
 		{
-			cout << vInput[i] << separation;
+			cout << *i << delimiter;
 		}
-		cout << vInput[vInput.size() - 1] << "\n";
+		cout << *i << "\n";
 	}
-	cout << "End of " << vName << " print\n\n";
+	cout << "End of " << name << " print\n\n";
 }
 
 vector<string> Split(const string &input, const string &delimiter)
 {
 	vector<string> output;
 
-	string s = input;
-	for (size_t i = s.find(delimiter); i != string::npos; i = s.find(delimiter))
+	string remaining = input;
+	for (size_t i = remaining.find(delimiter); i != string::npos; i = remaining.find(delimiter))
 	{
-		output.push_back(s.substr(0, i));
-		s = s.substr(i + delimiter.size());
+		output.push_back(remaining.substr(0, i));
+		remaining = remaining.substr(i + delimiter.size());
 	}
-	output.push_back(s);
+	output.push_back(remaining);
 
 	return output;
 }
@@ -127,12 +128,12 @@ int SumOfCardScores(const vector<Card> &cards)
 {
 	int sum = 0;
 
-	for (size_t i = 0; i < cards.size(); ++i)
+	for (vector<Card>::const_iterator i = cards.begin(); i != cards.end(); ++i)
 	{
-		if (0 < cards[i].matchingNumbers)
+		if (0 < (*i).MatchingNumbers)
 		{
 			int score = 1;
-			for (size_t j = 1; j < cards[i].matchingNumbers; ++j)
+			for (size_t j = 1; j < (*i).MatchingNumbers; ++j)
 			{
 				score *= 2;
 			}
@@ -150,7 +151,7 @@ int SumOfScratchcards(const vector<Card> &cards)
 
 	for (size_t i = 0; i < cards.size(); ++i)
 	{
-		for (size_t j = 1; j < (size_t)(cards[i].matchingNumbers + 1) && (i + j) < cards.size(); ++j)
+		for (size_t j = 1; j < (size_t)(cards[i].MatchingNumbers + 1) && (i + j) < cards.size(); ++j)
 		{
 			numberOfCards[i + j] += numberOfCards[i];
 		}

@@ -8,16 +8,15 @@
 
 struct Engine
 {
-	Engine();
 	Engine(const std::vector<std::string> &schematic);
 	~Engine();
 
 	void BuildFromSchematic(const std::vector<std::string> &schematic);
 	void ValidateGears();
 
-	std::vector<Node> nodes;
-	std::vector<Part*> linkedParts;
-	std::vector<Part*> unlinkedParts;
+	std::vector<Node> Nodes;
+	std::vector<Part*> LinkedParts;
+	std::vector<Part*> UnlinkedParts;
 };
 
 #endif

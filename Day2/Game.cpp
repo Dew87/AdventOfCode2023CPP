@@ -2,19 +2,20 @@
 
 using namespace std;
 
-Game::Game(int ID) : ID(ID)
+Game::Game(int id, vector<Hand> hands) : ID(id), Hands(hands)
 {}
 
 ostream& operator << (ostream &o, const Game &game)
 {
 	o << "Game " << game.ID << ":";
-	if (0 < game.hands.size())
+	if (!game.Hands.empty())
 	{
-		for (int i = 0; i < game.hands.size() - 1; ++i)
+		vector<Hand>::const_iterator i, end;
+		for (i = game.Hands.begin(), end = --game.Hands.end(); i != end; ++i)
 		{
-			o << " " << game.hands[i] << ";";
+			o << " " << *i << ";";
 		}
-		o << " " << game.hands[game.hands.size() - 1];
+		o << " " << *i;
 	}
 	return o;
 }

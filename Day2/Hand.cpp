@@ -3,7 +3,7 @@
 
 using namespace std;
 
-Hand::Hand(const vector<int> &colors) : colors(colors)
+Hand::Hand(const vector<int> &colors) : Colors(colors)
 {}
 
 ostream& operator << (ostream &o, const Hand &hand)
@@ -11,7 +11,7 @@ ostream& operator << (ostream &o, const Hand &hand)
 	bool empty = true;
 	for (size_t i = 0; i < NUMBER_OF_COLORS; ++i)
 	{
-		int number = hand.colors[i];
+		int number = hand.Colors[i];
 		if (0 < number)
 		{
 			if (!empty) { o << ", "; }

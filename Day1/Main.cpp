@@ -20,7 +20,7 @@ const char* NUMBERS[] =
 	"nine"
 };
 
-void InputCalibration(vector<string> &vOutput)
+void InputCalibration(vector<string> &output)
 {
 	cout << "Start of calibration document input (blank line to end)\n";
 	while (true)
@@ -29,7 +29,7 @@ void InputCalibration(vector<string> &vOutput)
 		getline(cin, input);
 		if (input != "")
 		{
-			vOutput.push_back(input);
+			output.push_back(input);
 			continue;
 		}
 		break;
@@ -38,45 +38,44 @@ void InputCalibration(vector<string> &vOutput)
 }
 
 template <typename T>
-void PrintVector(const vector<T> &vInput, const char *vName, const char* separation)
+void PrintVector(const vector<T> &input, const char *name, const char* delimiter)
 {
-	cout << "Start of " << vName << "[" << vInput.size() << "] print\n";
-	if (0 < vInput.size())
+	cout << "Start of " << name << "[" << input.size() << "] print\n";
+	if (!input.empty())
 	{
-		for (size_t i = 0; i < vInput.size() - 1; i++)
+		typename vector<T>::const_iterator i, end;
+		for (i = input.begin(), end = --input.end(); i != end; ++i)
 		{
-			cout << vInput[i] << separation;
+			cout << *i << delimiter;
 		}
-		cout << vInput[vInput.size() - 1] << "\n";
+		cout << *i << "\n";
 	}
-	cout << "End of " << vName << " print\n\n";
+	cout << "End of " << name << " print\n\n";
 }
 
-int SumOfCalibrationNew(const vector<string> &vInput)
+int SumOfCalibrationNew(const vector<string> &input)
 {
 	int sum = 0;
-	for (int i = 0; i < vInput.size(); ++i)
+	for (vector<string>::const_iterator i = input.begin(); i != input.end(); ++i)
 	{
-		string input = vInput[i];
-
 		char first_digit = ' ';
 		char last_digit = ' ';
 		int first_digit_index = INT_MAX;
 		int last_digit_index = INT_MIN;
 
 		// Find first digit
-		for (int j = 0; j < input.size(); ++j)
+		for (int j = 0; j < (*i).size(); ++j)
 		{
-			if ('0' <= input[j] && input[j] <= '9')
+			if ('0' <= (*i)[j] && (*i)[j] <= '9')
 			{
-				first_digit = input[j];
+				first_digit = (*i)[j];
 				first_digit_index = j;
 				break;
 			}
 		}
 		for (int j = 0; j < NUMBER_OF_NUMBERS; ++j)
 		{
-			int index = input.find(NUMBERS[j]);
+			int index = (*i).find(NUMBERS[j]);
 			if (index != string::npos && index < first_digit_index)
 			{
 				first_digit = '0' + j;
@@ -85,18 +84,18 @@ int SumOfCalibrationNew(const vector<string> &vInput)
 		}
 
 		// Find last digit
-		for (int j = input.size() - 1; -1 < j; --j)
+		for (int j = (*i).size() - 1; 0 <= j; --j)
 		{
-			if ('0' <= input[j] && input[j] <= '9')
+			if ('0' <= (*i)[j] && (*i)[j] <= '9')
 			{
-				last_digit = input[j];
+				last_digit = (*i)[j];
 				last_digit_index = j;
 				break;
 			}
 		}
 		for (int j = 0; j < NUMBER_OF_NUMBERS; ++j)
 		{
-			int index = input.rfind(NUMBERS[j]);
+			int index = (*i).rfind(NUMBERS[j]);
 			if (index != string::npos && last_digit_index < index)
 			{
 				last_digit = '0' + j;
@@ -118,47 +117,41 @@ int SumOfCalibrationNew(const vector<string> &vInput)
 			}
 			catch (exception e)
 			{
-				cerr << number << " on input[" << i << "] can't be converted to int\n";
+				cerr << " Can't be converted to int: " << number << "\n";
 			}
 		}
 		else
 		{
-			cout << "No number found on input[" << i << "]\n";
+			cout << "No number found: " << *i << "\n";
 		}
 	}
 	return sum;
 }
 
-int SumOfCalibrationOld(const vector<string> &vInput)
+int SumOfCalibrationOld(const vector<string> &input)
 {
 	int sum = 0;
-	for (int i = 0; i < vInput.size(); ++i)
+	for (vector<string>::const_iterator i = input.begin(); i != input.end(); ++i)
 	{
-		string input = vInput[i];
-
 		char first_digit = ' ';
 		char last_digit = ' ';
-		int first_digit_index = INT_MAX;
-		int last_digit_index = INT_MIN;
 
 		// Find first digit
-		for (int j = 0; j < input.size(); ++j)
+		for (string::const_iterator j = (*i).begin(); j != (*i).end(); ++j)
 		{
-			if ('0' <= input[j] && input[j] <= '9')
+			if ('0' <= *j && *j <= '9')
 			{
-				first_digit = input[j];
-				first_digit_index = j;
+				first_digit = *j;
 				break;
 			}
 		}
 
 		// Find last digit
-		for (int j = input.size() - 1; -1 < j; --j)
+		for (string::const_reverse_iterator j = (*i).rbegin(); j != (*i).rend(); ++j)
 		{
-			if ('0' <= input[j] && input[j] <= '9')
+			if ('0' <= *j && *j <= '9')
 			{
-				last_digit = input[j];
-				last_digit_index = j;
+				last_digit = *j;
 				break;
 			}
 		}
@@ -177,12 +170,12 @@ int SumOfCalibrationOld(const vector<string> &vInput)
 			}
 			catch (exception e)
 			{
-				cerr << number << " on input[" << i << "] can't be converted to int\n";
+				cerr << "Can't be converted to int: " << number << "\n";
 			}
 		}
 		else
 		{
-			cout << "No number found on input[" << i << "]\n";
+			cout << "No number found: " << *i << "\n";
 		}
 	}
 	return sum;

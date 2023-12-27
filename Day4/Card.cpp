@@ -2,20 +2,20 @@
 
 using namespace std;
 
-Card::Card(int ID, std::vector<int> numbers, std::vector<int> winningNumbers) : ID(ID), matchingNumbers(0), numbers(numbers), winningNumbers(winningNumbers)
+Card::Card(int id, std::vector<int> numbers, std::vector<int> winningNumbers) : ID(id), MatchingNumbers(0), Numbers(numbers), WinningNumbers(winningNumbers)
 {}
 
 void Card::CalculateMatchingNumbers()
 {
-	matchingNumbers = 0;
+	MatchingNumbers = 0;
 
-	for (size_t i = 0; i < numbers.size(); ++i)
+	for (vector<int>::iterator i = Numbers.begin(); i != Numbers.end(); ++i)
 	{
-		for (size_t j = 0; j < winningNumbers.size(); ++j)
+		for (vector<int>::iterator j = WinningNumbers.begin(); j != WinningNumbers.end(); ++j)
 		{
-			if (numbers[i] == winningNumbers[j])
+			if (*i == *j)
 			{
-				++matchingNumbers;
+				++MatchingNumbers;
 			}
 		}
 	}
@@ -24,14 +24,14 @@ void Card::CalculateMatchingNumbers()
 ostream& operator << (ostream &o, const Card &card)
 {
 	o << "Card " << card.ID << ":";
-	for (size_t i = 0; i < card.winningNumbers.size(); ++i)
+	for (vector<int>::const_iterator i = card.WinningNumbers.begin(); i != card.WinningNumbers.end(); ++i)
 	{
-		o << " " << card.winningNumbers[i];
+		o << " " << *i;
 	}
 	o << " |";
-	for (size_t i = 0; i < card.numbers.size(); ++i)
+	for (vector<int>::const_iterator i = card.Numbers.begin(); i < card.Numbers.end(); ++i)
 	{
-		o << " " << card.numbers[i];
+		o << " " << *i;
 	}
 	return o;
 }

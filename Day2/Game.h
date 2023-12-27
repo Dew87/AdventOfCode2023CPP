@@ -7,10 +7,10 @@
 
 struct Game
 {
-	Game(int ID);
+	Game(int id, std::vector<Hand> hands);
 
 	int ID;
-	std::vector<Hand> hands;
+	std::vector<Hand> Hands;
 };
 
 std::ostream& operator << (std::ostream &o, const Game &game);

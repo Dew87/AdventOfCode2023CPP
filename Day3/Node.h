@@ -10,9 +10,9 @@ struct Node
 {
 	Node(Vector2i position, bool isGear);
 
-	bool isGear;
-	Vector2i position;
-	std::vector<Part*> linkedParts;
+	bool IsGear;
+	Vector2i Position;
+	std::vector<Part*> LinkedParts;
 };
 
 #endif

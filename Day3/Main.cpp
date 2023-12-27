@@ -5,7 +5,7 @@
 
 using namespace std;
 
-void InputSchematic(vector<string> &vOutput)
+void InputSchematic(vector<string> &output)
 {
 	cout << "Start of schematic input (blank line to end)\n";
 	while (true)
@@ -14,7 +14,7 @@ void InputSchematic(vector<string> &vOutput)
 		getline(cin, input);
 		if (input != "")
 		{
-			vOutput.push_back(input);
+			output.push_back(input);
 			continue;
 		}
 		break;
@@ -23,31 +23,32 @@ void InputSchematic(vector<string> &vOutput)
 }
 
 template <typename T>
-void PrintVector(const vector<T> &vInput, const char *vName, const char* separation)
+void PrintVector(const vector<T> &input, const char *name, const char* delimiter)
 {
-	cout << "Start of " << vName << "[" << vInput.size() << "] print\n";
-	if (0 < vInput.size())
+	cout << "Start of " << name << "[" << input.size() << "] print\n";
+	if (!input.empty())
 	{
-		for (size_t i = 0; i < vInput.size() - 1; i++)
+		typename vector<T>::const_iterator i, end;
+		for (i = input.begin(), end = --input.end(); i != end; ++i)
 		{
-			cout << vInput[i] << separation;
+			cout << *i << delimiter;
 		}
-		cout << vInput[vInput.size() - 1] << "\n";
+		cout << *i << "\n";
 	}
-	cout << "End of " << vName << " print\n\n";
+	cout << "End of " << name << " print\n\n";
 }
 
 int SumOfGearRatios(const Engine &engine)
 {
 	int sum = 0;
-	for (size_t i = 0; i < engine.nodes.size(); ++i)
+	for (vector<Node>::const_iterator i = engine.Nodes.begin(); i != engine.Nodes.end(); ++i)
 	{
-		if (engine.nodes[i].isGear)
+		if ((*i).IsGear)
 		{
 			int ratio = 1;
-			for (size_t j = 0; j < engine.nodes[i].linkedParts.size(); ++j)
+			for (vector<Part*>::const_iterator j = (*i).LinkedParts.begin(); j != (*i).LinkedParts.end(); ++j)
 			{
-				ratio *= engine.nodes[i].linkedParts[j]->number;
+				ratio *= (*j)->Number;
 			}
 			sum += ratio;
 		}
@@ -58,9 +59,9 @@ int SumOfGearRatios(const Engine &engine)
 int SumOfPartNumbers(const Engine &engine)
 {
 	int sum = 0;
-	for (size_t i = 0; i < engine.linkedParts.size(); ++i)
+	for (vector<Part*>::const_iterator i = engine.LinkedParts.begin(); i != engine.LinkedParts.end(); ++i)
 	{
-		sum += engine.linkedParts[i]->number;
+		sum += (*i)->Number;
 	}
 	return sum;
 }
