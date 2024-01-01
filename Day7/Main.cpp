@@ -1,7 +1,6 @@
 #include "Hand.h"
 #include <algorithm>
 #include <iostream>
-#include <sstream>
 #include <string>
 #include <vector>
 
@@ -9,7 +8,7 @@ using namespace std;
 
 void InputHands(vector<Hand> &output)
 {
-	cout << "Start of input (blank line to end)\n";
+	cout << "Start of hands input (blank line to end)\n";
 	while (true)
 	{
 		string input;
@@ -59,7 +58,7 @@ void InputHands(vector<Hand> &output)
 		}
 		break;
 	}
-	cout << "End of input\n\n";
+	cout << "End of hands input\n\n";
 }
 
 template <typename T>
