@@ -13,73 +13,74 @@ void InputGames(vector<Game> &output)
 	cout << "Start of games input (blank line to end)\n";
 	while (true)
 	{
-		size_t index;
 		string input;
-
 		getline(cin, input);
-		index = input.find(": ");
-
-		if (index != string::npos)
+		if (input != "")
 		{
-			int id;
-			vector<Hand> hands;
-
-			string s1 = input.substr(0, index);
-			string s2 = input.substr(index + 2);
-
-			// Get game ID
-			index = s1.find(" ");
+			size_t index;
+			index = input.find(": ");
 			if (index != string::npos)
 			{
-				try
-				{
-					id = stoi(s1.substr(index + 1));
-				}
-				catch (exception e)
-				{
-					break;
-				}
+				int id;
+				vector<Hand> hands;
 
-				// Get hands
-				vector<string> vStringHands = Split(s2, "; ");
-				for (vector<string>::iterator i = vStringHands.begin(); i != vStringHands.end(); ++i)
-				{
-					vector<int> colors(NUMBER_OF_COLORS, 0);
-					vector<string> vStringColors = Split(*i, ", ");
+				string s1 = input.substr(0, index);
+				string s2 = input.substr(index + 2);
 
-					for (vector<string>::iterator j = vStringColors.begin(); j != vStringColors.end(); ++j)
+				// Get game ID
+				index = s1.find(" ");
+				if (index != string::npos)
+				{
+					try
 					{
-						index = (*j).find(" ");
-						if (index != string::npos)
-						{
-							int number;
-							try
-							{
-								number = stoi((*j).substr(0, index));
-							}
-							catch (exception e)
-							{
-								continue;
-							}
+						id = stoi(s1.substr(index + 1));
+					}
+					catch (exception e)
+					{
+						continue;
+					}
 
-							string color = (*j).substr(index + 1);
-							for (size_t k = 0; k < NUMBER_OF_COLORS; ++k)
+					// Get hands
+					vector<string> vStringHands = Split(s2, "; ");
+					for (vector<string>::iterator i = vStringHands.begin(); i != vStringHands.end(); ++i)
+					{
+						vector<int> colors(NUMBER_OF_COLORS, 0);
+						vector<string> vStringColors = Split(*i, ", ");
+
+						for (vector<string>::iterator j = vStringColors.begin(); j != vStringColors.end(); ++j)
+						{
+							index = (*j).find(" ");
+							if (index != string::npos)
 							{
-								if (color == COLORS[k])
+								int number;
+								try
 								{
-									colors[k] = number;
-									break;
+									number = stoi((*j).substr(0, index));
+								}
+								catch (exception e)
+								{
+									continue;
+								}
+
+								string color = (*j).substr(index + 1);
+								for (size_t k = 0; k < NUMBER_OF_COLORS; ++k)
+								{
+									if (color == COLORS[k])
+									{
+										colors[k] = number;
+										break;
+									}
 								}
 							}
 						}
+
+						hands.push_back(Hand(colors));
 					}
 
-					hands.push_back(Hand(colors));
+					output.push_back(Game(id, hands));
 				}
-
-				output.push_back(Game(id, hands));
-				continue;
 			}
+			continue;
 		}
 		break;
 	}

@@ -21,11 +21,10 @@ size_t GetNumber(const vector<size_t> &input)
 
 void Input(vector<size_t> &output, string name)
 {
-
+	cout << "Start of " << name << " input (blank line to end)\n";
 	size_t index;
 	string input;
 
-	cout << "Start of " << name << " input (blank line to end)\n";
 	getline(cin, input);
 	index = input.find(name);
 	if (index != string::npos)

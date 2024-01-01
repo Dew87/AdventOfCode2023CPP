@@ -22,18 +22,21 @@ void GetChart(vector<string> &output, const vector<size_t> vSeed, const vector<s
 
 void GetSeedRange(const vector<size_t> &input, vector<RangeEntry> &output)
 {
-	for (size_t i = 0; i < input.size() - 1; i += 2)
+	if (1 < input.size())
 	{
-		output.push_back(RangeEntry(input[i], input[i + 1]));
+		for (size_t i = 0; i < input.size() - 1; i += 2)
+		{
+			output.push_back(RangeEntry(input[i], input[i + 1]));
+		}
 	}
 }
 
 void InputMap(vector<MapEntry> &output, const char *name)
 {
+	cout << "Start of " << name << " input (blank line to end)\n";
 	size_t index;
 	string input;
 
-	cout << "Start of " << name << " input (blank line to end)\n";
 	getline(cin, input);
 	index = input.find(name);
 	if (index != string::npos)
@@ -43,12 +46,13 @@ void InputMap(vector<MapEntry> &output, const char *name)
 			getline(cin, input);
 			if (input != "")
 			{
+				stringstream stream(input);
 				size_t destination, range, source;
 
-				stringstream stream(input);
-				stream >> destination >> source >> range;
-
-				output.push_back(MapEntry(source, destination, range));
+				while (stream >> destination >> source >> range)
+				{
+					output.push_back(MapEntry(source, destination, range));
+				}
 				continue;
 			}
 			break;
@@ -62,19 +66,20 @@ void InputSeeds(vector<size_t> &output)
 	cout << "Start of seeds input (blank line to end)\n";
 	while (true)
 	{
-		size_t index;
 		string input;
-
 		getline(cin, input);
-		index = input.find("seeds: ");
-		if (index != string::npos)
+		if (input != "")
 		{
-			stringstream stream(input.substr(index + 7));
-			size_t number;
-
-			while (stream >> number)
+			size_t index = input.find("seeds: ");
+			if (index != string::npos)
 			{
-				output.push_back(number);
+				stringstream stream(input.substr(index + 7));
+				size_t number;
+
+				while (stream >> number)
+				{
+					output.push_back(number);
+				}
 			}
 			continue;
 		}

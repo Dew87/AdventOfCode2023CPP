@@ -22,70 +22,72 @@ void InputCards(vector<Card> &output)
 	{
 		string input;
 		getline(cin, input);
-
-		size_t index = input.find(": ");
-		if (index != string::npos)
+		if (input != "")
 		{
-			int id = 0;
-			vector<int> numbers;
-			vector<int> winningNumbers;
-
-			// Separate card ID from numbers
-			string s1 = input.substr(0, index);
-			string s2 = input.substr(index + 2);
-
-			// Game ID
-			index = s1.find(" ");
+			size_t index = input.find(": ");
 			if (index != string::npos)
 			{
-				try
+				int id = 0;
+				vector<int> numbers;
+				vector<int> winningNumbers;
+
+				// Separate card ID from numbers
+				string s1 = input.substr(0, index);
+				string s2 = input.substr(index + 2);
+
+				// Game ID
+				index = s1.find(" ");
+				if (index != string::npos)
 				{
-					id = stoi(s1.substr(index + 1));
+					try
+					{
+						id = stoi(s1.substr(index + 1));
+					}
+					catch (exception e)
+					{
+						continue;
+					}
 				}
-				catch (exception e)
+
+				// Separate numbers and winning numbers
+				index = s2.find(" | ");
+				string s21 = s2.substr(0, index);
+				string s22 = s2.substr(index + 3);
+				vector<string> sWinningNumbers = Split(s21, " ");
+				vector<string> sNumbers = Split(s22, " ");
+
+				// Numbers
+				for (vector<string>::iterator i = sNumbers.begin(); i != sNumbers.end(); ++i)
 				{
-					break;
+					int number = 0;
+					try
+					{
+						number = stoi(*i);
+					}
+					catch (exception e)
+					{
+						continue;
+					}
+					numbers.push_back(number);
 				}
+
+				// Winning numbers
+				for (vector<string>::iterator i = sWinningNumbers.begin(); i != sWinningNumbers.end(); ++i)
+				{
+					int number = 0;
+					try
+					{
+						number = stoi(*i);
+					}
+					catch (exception e)
+					{
+						continue;
+					}
+					winningNumbers.push_back(number);
+				}
+
+				output.push_back(Card(id, numbers, winningNumbers));
 			}
-
-			// Separate numbers and winning numbers
-			index = s2.find(" | ");
-			string s21 = s2.substr(0, index);
-			string s22 = s2.substr(index + 3);
-			vector<string> sWinningNumbers = Split(s21, " ");
-			vector<string> sNumbers = Split(s22, " ");
-
-			// Numbers
-			for (size_t i = 0; i < sNumbers.size(); ++i)
-			{
-				int number = 0;
-				try
-				{
-					number = stoi(sNumbers[i]);
-				}
-				catch (exception e)
-				{
-					continue;
-				}
-				numbers.push_back(number);
-			}
-
-			// Winning numbers
-			for (size_t i = 0; i < sWinningNumbers.size(); ++i)
-			{
-				int number = 0;
-				try
-				{
-					number = stoi(sWinningNumbers[i]);
-				}
-				catch (exception e)
-				{
-					continue;
-				}
-				winningNumbers.push_back(number);
-			}
-
-			output.push_back(Card(id, numbers, winningNumbers));
 			continue;
 		}
 		break;
